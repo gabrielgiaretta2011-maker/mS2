@@ -1,3 +1,4 @@
+// --- FIREBASE ---
 const firebaseConfig = {
     apiKey: "AIzaSyAHIBRXgI7LZZO-9kUEPnFMJUsH8Jkd21w",
     authDomain: "marias2.firebaseapp.com",
@@ -11,8 +12,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
+// --- TIMELINE ---
 const historia = [
-    { data: "18/09/2024", texto: "Nosso primeiro beijo. Onde tudo realmente começou... " },
+    { data: "18/09/2024", texto: "Nosso primeiro beijo. Onde tudo realmente começou..." },
     { data: "18/10/2024", texto: "O início oficial de tudo. a partir desse dia começamos a namorar. ✨" },
     { data: "18/11/2024", texto: "Nosso primeiro mês. Mas foi quando tivemos que nos separar... foram 2 meses dificeis.💔" },
     { data: "20/02/2025", texto: "Eu voltei para você! Para finalmente ficarmos juntos de novo. 🏠❤️" },
@@ -24,38 +26,44 @@ const historia = [
     { data: "Hoje", texto: "Construindo nosso futuro um bit de cada vez. 💻❤️" }
 ];
 
-// Gerar Timeline
 const timelineContainer = document.getElementById("main-timeline");
-historia.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "timeline-item";
-    div.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><strong style="color:var(--accent-purple)">${item.data}</strong><p>${item.texto}</p></div>`;
-    timelineContainer.appendChild(div);
-});
+if(timelineContainer) {
+    historia.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "timeline-item";
+        div.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><strong style="color:var(--accent-purple);">${item.data}</strong><p style="margin-top:5px;">${item.texto}</p></div>`;
+        timelineContainer.appendChild(div);
+    });
+}
 
-// Cronômetro
+// --- CRONÔMETRO ---
 const dataInicio = new Date(2024, 9, 18, 20, 20, 0); 
 setInterval(() => {
     const dif = new Date() - dataInicio;
-    document.getElementById("days").innerText = Math.floor(dif / 86400000).toString().padStart(2, '0');
-    document.getElementById("hours").innerText = Math.floor((dif % 86400000) / 3600000).toString().padStart(2, '0');
-    document.getElementById("minutes").innerText = Math.floor((dif % 3600000) / 60000).toString().padStart(2, '0');
-    document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000).toString().padStart(2, '0');
+    const d = document.getElementById("days");
+    if(d) {
+        d.innerText = Math.floor(dif / 86400000).toString().padStart(2, '0');
+        document.getElementById("hours").innerText = Math.floor((dif % 86400000) / 3600000).toString().padStart(2, '0');
+        document.getElementById("minutes").innerText = Math.floor((dif % 3600000) / 60000).toString().padStart(2, '0');
+        document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000).toString().padStart(2, '0');
+    }
 }, 1000);
 
-// Galeria Firebase
+// --- GALERIA E APAGAR FOTO ---
 const imageInput = document.getElementById("imageInput");
 const galleryGrid = document.getElementById("galleryGrid");
 
-imageInput.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-        await database.ref('galeria').push({ url: ev.target.result });
+if(imageInput) {
+    imageInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+            await database.ref('galeria').push({ url: ev.target.result });
+        };
+        reader.readAsDataURL(file);
     };
-    reader.readAsDataURL(file);
-};
+}
 
 database.ref('galeria').on('child_added', (snap) => {
     const div = document.createElement("div");
@@ -63,7 +71,7 @@ database.ref('galeria').on('child_added', (snap) => {
     div.id = snap.key;
     div.innerHTML = `
         <img src="${snap.val().url}">
-        <button class="delete-btn" onclick="apagarFoto('${snap.key}')">✕</button>
+        <button class="delete-btn" onclick="apagarFoto('${snap.key}')">X</button>
     `;
     galleryGrid.appendChild(div);
 });
@@ -74,60 +82,81 @@ database.ref('galeria').on('child_removed', (snap) => {
 });
 
 window.apagarFoto = (key) => {
-    if(confirm("Apagar essa foto?")) database.ref('galeria').child(key).remove();
-};
-
-// Corações
-setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "floating-heart";
-    heart.innerHTML = ['💜', '✨', '❤️', '💙'][Math.floor(Math.random() * 4)];
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.bottom = "-20px";
-    document.getElementById("particles-container").appendChild(heart);
-    setTimeout(() => heart.remove(), 4000);
-}, 450);
-
-// Início e Surpresa
-document.getElementById("start-btn").onclick = () => {
-    document.getElementById("intro-overlay").style.opacity = "0";
-    setTimeout(() => document.getElementById("intro-overlay").style.display = "none", 800);
-    document.getElementById("romanticAudio").play().catch(() => {});
-    
-    setTimeout(() => {
-        const trans = document.getElementById("special-transition");
-        trans.classList.add("active");
-        setTimeout(() => {
-            trans.classList.remove("active");
-            document.getElementById("final-action-container").style.display = "block";
-        }, 7000);
-    }, 50000);
-};
-
-// Carta
-const textoCarta = "Não importa a distância ou o tempo, meu coração sempre soube o caminho de volta para você. Você é minha melhor escolha todos os dias. Eu te amo muito! ❤️";
-document.getElementById("envelope").onclick = () => {
-    const env = document.getElementById("envelope");
-    const isOpen = env.classList.toggle("open");
-    const txt = document.getElementById("typewriter-text");
-    txt.innerHTML = "";
-    if (isOpen) {
-        let i = 0;
-        const type = () => { if (i < textoCarta.length) { txt.innerHTML += textoCarta.charAt(i++); setTimeout(type, 50); } };
-        setTimeout(type, 800);
+    if(confirm("Tem certeza que deseja apagar essa foto?")) {
+        database.ref('galeria').child(key).remove();
     }
 };
 
-// Música e Pergunta
-document.getElementById("music-btn").onclick = () => {
-    const a = document.getElementById("romanticAudio");
-    if (a.paused) { a.play(); document.getElementById("music-btn").innerText = "⏸️"; }
-    else { a.pause(); document.getElementById("music-btn").innerText = "▶️"; }
-};
+// --- CORAÇÕES FLUTUANTES ---
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.style.position = "absolute";
+    heart.innerHTML = ['💜', '✨', '❤️', '💙'][Math.floor(Math.random() * 4)];
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.bottom = "-20px";
+    heart.style.animation = "floatUp 4s linear forwards";
+    heart.style.zIndex = "-1";
+    document.getElementById("particles-container").appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+}, 400);
 
-document.getElementById("final-surprise-btn").onclick = () => document.getElementById("proposal-modal").classList.add("show");
-document.getElementById("btn-yes").onclick = () => {
-    document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2><p>Te amo!</p>";
-};
-document.getElementById("btn-no").onclick = () => document.getElementById("error-msg").style.display = "block";
-document.getElementById("theme-toggle").onclick = () => document.body.classList.toggle("light-mode");
+// --- CARTA ---
+const textoCarta = "Não importa a distância ou o tempo, meu coração sempre soube o caminho de volta para você. Você é minha melhor escolha todos os dias. Eu te amo muito! ❤️";
+const envelope = document.getElementById("envelope");
+if(envelope) {
+    envelope.onclick = () => {
+        const isOpen = envelope.classList.toggle("open");
+        const txt = document.getElementById("typewriter-text");
+        txt.innerHTML = "";
+        if (isOpen) {
+            let i = 0;
+            const type = () => { if (i < textoCarta.length) { txt.innerHTML += textoCarta.charAt(i++); setTimeout(type, 50); } };
+            setTimeout(type, 800);
+        }
+    };
+}
+
+// --- BOTÃO ENTRAR, MÚSICA E SURPRESA DE 50s ---
+const startBtn = document.getElementById("start-btn");
+if(startBtn) {
+    startBtn.onclick = () => {
+        document.getElementById("intro-overlay").style.display = "none";
+        document.getElementById("romanticAudio").play().catch(() => {});
+        
+        // Contagem exata de 50 segundos para a surpresa
+        setTimeout(() => {
+            const trans = document.getElementById("special-transition");
+            trans.classList.add("active");
+            
+            setTimeout(() => trans.classList.add("show-text"), 1000);
+            
+            // Depois de 8 segundos na tela preta, mostra o pedido
+            setTimeout(() => {
+                trans.classList.remove("active");
+                document.getElementById("proposal-modal").classList.add("show");
+            }, 8000);
+            
+        }, 50000); // 50000 = 50 segundos
+    };
+}
+
+// --- PEDIDO FINAL (BOTÕES SIM E NÃO) ---
+const btnYes = document.getElementById("btn-yes");
+const btnNo = document.getElementById("btn-no");
+
+if(btnYes) {
+    btnYes.onclick = () => {
+        document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2><p>Te amo para sempre!</p>";
+    };
+}
+if(btnNo) {
+    btnNo.onclick = () => {
+        alert("Resposta incorreta! Tente novamente. ❤️");
+    };
+}
+
+// --- TEMA (MODO CLARO/ESCURO) ---
+const themeToggle = document.getElementById("theme-toggle");
+if(themeToggle) {
+    themeToggle.onclick = () => document.body.classList.toggle("light-mode");
+}
