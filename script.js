@@ -43,20 +43,7 @@ setInterval(() => {
     document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000).toString().padStart(2, '0');
 }, 1000);
 
-// Galeria com Função de Apagar
-const imageInput = document.getElementById("imageInput");
-const galleryGrid = document.getElementById("galleryGrid");
-
-imageInput.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file || file.size > 1000000) return alert("Foto muito grande!");
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-        await database.ref('galeria').push({ url: ev.target.result });
-    };
-    reader.readAsDataURL(file);
-};
-
+// Substitua apenas a parte da galeria e exclusão para casar com o CSS novo:
 database.ref('galeria').on('child_added', (snap) => {
     const div = document.createElement("div");
     div.className = "photo-card";
@@ -68,15 +55,11 @@ database.ref('galeria').on('child_added', (snap) => {
     galleryGrid.appendChild(div);
 });
 
-database.ref('galeria').on('child_removed', (snap) => {
-    const el = document.getElementById(snap.key);
-    if (el) el.remove();
-});
-
 window.apagarFoto = (key) => {
-    if(confirm("Deseja apagar essa foto para sempre?")) database.ref('galeria').child(key).remove();
+    if(confirm("Deseja apagar esse momento? ❤️")) {
+        database.ref('galeria').child(key).remove();
+    }
 };
-
 // Corações
 setInterval(() => {
     const heart = document.createElement("div");
