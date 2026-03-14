@@ -1,168 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
 :root {
-    --bg-color: #0f172a;
-    --card-bg: rgba(30, 41, 59, 0.7);
-    --text-color: #f1f5f9;
+    --bg-color: #0a0f1e;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
     --accent-purple: #a78bfa;
-    --accent-blue: #38bdf8;
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-pink: #f472b6;
+    --text-main: #f1f5f9;
 }
 
-body { 
-    margin: 0; 
-    font-family: 'Poppins', sans-serif; 
-    background-color: var(--bg-color); 
-    color: var(--text-color); 
-    overflow-x: hidden; 
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-/* --- Tela de Entrada (Overlay) --- */
-#intro-overlay { 
-    position: fixed; 
-    inset: 0; 
-    background: #0f172a; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 9999; 
-    transition: 0.8s;
+/* Fundo Estelar */
+#particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at center, #1e1b4b 0%, #0a0f1e 100%);
 }
 
-.intro-card { 
-    text-align: center; 
-    padding: 40px;
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
-#start-btn { 
-    background: transparent; 
-    color: var(--accent-purple); 
-    border: 2px solid var(--accent-purple); 
-    padding: 12px 35px; 
-    border-radius: 30px; 
-    font-size: 1.1rem; 
-    cursor: pointer; 
-    transition: 0.4s;
+/* Cabeçalho e Títulos */
+.title {
     font-family: 'Dancing Script', cursive;
-}
-
-#start-btn:hover { 
-    background: var(--accent-purple); 
-    color: white; 
-    box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
-}
-
-/* --- Container Principal --- */
-.container { 
-    width: 90%; 
-    max-width: 800px; 
-    margin: 40px auto; 
-    padding: 20px; 
-}
-
-.title { 
-    font-family: 'Dancing Script', cursive; 
-    font-size: 3.5rem; 
-    text-align: center; 
+    font-size: 4rem;
+    text-align: center;
     color: var(--accent-purple);
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
 }
 
-/* --- Galeria --- */
-.gallery-section { margin-top: 50px; }
+/* Cronômetro Organizado */
+#timer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+}
 
-.upload-btn { 
-    display: inline-block;
-    background: rgba(167, 139, 250, 0.1);
+.time-block {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 15px;
+    border-radius: 15px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.time-block span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
     color: var(--accent-purple);
+}
+
+.time-block small {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Seção de Fotos (Estilo Dashboard) */
+.gallery-section {
+    background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    padding: 10px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: 0.3s;
+    border-radius: 24px;
+    padding: 30px;
+    backdrop-filter: blur(12px);
+    margin-top: 40px;
 }
 
-.upload-btn:hover { background: rgba(167, 139, 250, 0.2); }
-
-.gallery-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-    gap: 15px; 
+.section-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 25px;
 }
 
-.photo-card { 
-    position: relative; 
-    border-radius: 15px; 
-    overflow: hidden; 
-    border: 1px solid var(--glass-border);
-    aspect-ratio: 1 / 1;
-}
-
-.photo-card img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-}
-
-.delete-btn { 
-    position: absolute; 
-    top: 8px; 
-    right: 8px; 
-    background: rgba(0, 0, 0, 0.5); 
-    color: white; 
-    border: none; 
-    border-radius: 50%; 
-    width: 28px; 
-    height: 28px; 
-    cursor: pointer; 
-    backdrop-filter: blur(5px);
+/* Botão Adicionar Foto (Bonito agora) */
+.upload-btn {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+    background: rgba(167, 139, 250, 0.1);
+    border: 2px dashed var(--accent-purple);
+    color: var(--accent-purple);
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
     transition: 0.3s;
+    margin-bottom: 30px;
 }
 
-.delete-btn:hover { background: rgba(255, 0, 0, 0.6); }
+.upload-btn:hover {
+    background: rgba(167, 139, 250, 0.2);
+    transform: translateY(-2px);
+}
 
-/* --- Player de Música --- */
-.music-player { 
-    position: fixed; 
-    bottom: 25px; 
-    left: 25px; 
-    background: rgba(30, 41, 59, 0.8); 
-    padding: 10px 20px; 
-    border-radius: 40px; 
-    border: 1px solid var(--glass-border); 
-    backdrop-filter: blur(10px);
+/* Grid de Fotos */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.photo-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+}
+
+/* Botão da Pergunta Final (Gradient) */
+#final-surprise-btn {
+    background: linear-gradient(90deg, #a78bfa, #f472b6);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(167, 139, 250, 0.4);
+    transition: 0.4s;
+    margin: 40px auto;
+    display: block;
+}
+
+#final-surprise-btn:hover {
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 15px 30px rgba(167, 139, 250, 0.6);
+}
+
+/* Player de Música Estilo Neumorfismo Dark */
+.music-player {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--glass-border);
+    padding: 15px 25px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     z-index: 1000;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 
-#music-btn { 
-    background: none; 
-    border: none; 
-    color: var(--accent-purple); 
-    font-size: 1.2rem; 
-    cursor: pointer; 
+#music-btn {
+    background: var(--accent-purple);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
 }
 
-/* --- Corações --- */
-.floating-heart { 
-    position: fixed; 
-    pointer-events: none; 
-    z-index: 99; 
-    animation: floatUp 4.5s linear forwards; 
+/* Corações Flutuantes */
+.floating-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    animation: floatUp 5s ease-in forwards;
 }
 
 @keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-}
-
-/* --- Responsividade --- */
-@media (max-width: 600px) {
-    .title { font-size: 2.5rem; }
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    0% { transform: translateY(0) scale(1) rotate(0); opacity: 0; }
+    20% { opacity: 0.8; }
+    100% { transform: translateY(-100vh) scale(1.5) rotate(45deg); opacity: 0; }
 }
