@@ -24,12 +24,12 @@ const historia = [
     { data: "Hoje", texto: "Construindo nosso futuro um bit de cada vez. 💻❤️" }
 ];
 
-// Timeline
+// Gerar Timeline
 const timelineContainer = document.getElementById("main-timeline");
 historia.forEach(item => {
     const div = document.createElement("div");
     div.className = "timeline-item";
-    div.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><strong>${item.data}</strong><p>${item.texto}</p></div>`;
+    div.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><strong style="color:var(--accent-purple)">${item.data}</strong><p>${item.texto}</p></div>`;
     timelineContainer.appendChild(div);
 });
 
@@ -43,7 +43,20 @@ setInterval(() => {
     document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000).toString().padStart(2, '0');
 }, 1000);
 
-// Substitua apenas a parte da galeria e exclusão para casar com o CSS novo:
+// Galeria Firebase
+const imageInput = document.getElementById("imageInput");
+const galleryGrid = document.getElementById("galleryGrid");
+
+imageInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+        await database.ref('galeria').push({ url: ev.target.result });
+    };
+    reader.readAsDataURL(file);
+};
+
 database.ref('galeria').on('child_added', (snap) => {
     const div = document.createElement("div");
     div.className = "photo-card";
@@ -55,26 +68,32 @@ database.ref('galeria').on('child_added', (snap) => {
     galleryGrid.appendChild(div);
 });
 
+database.ref('galeria').on('child_removed', (snap) => {
+    const el = document.getElementById(snap.key);
+    if (el) el.remove();
+});
+
 window.apagarFoto = (key) => {
-    if(confirm("Deseja apagar esse momento? ❤️")) {
-        database.ref('galeria').child(key).remove();
-    }
+    if(confirm("Apagar essa foto?")) database.ref('galeria').child(key).remove();
 };
+
 // Corações
 setInterval(() => {
     const heart = document.createElement("div");
     heart.className = "floating-heart";
-    heart.innerHTML = ['💜', '✨', '❤️'][Math.floor(Math.random() * 3)];
+    heart.innerHTML = ['💜', '✨', '❤️', '💙'][Math.floor(Math.random() * 4)];
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.bottom = "-20px";
     document.getElementById("particles-container").appendChild(heart);
     setTimeout(() => heart.remove(), 4000);
-}, 400);
+}, 450);
 
-// Surpresa e Início
+// Início e Surpresa
 document.getElementById("start-btn").onclick = () => {
-    document.getElementById("intro-overlay").style.display = "none";
-    document.getElementById("romanticAudio").play();
+    document.getElementById("intro-overlay").style.opacity = "0";
+    setTimeout(() => document.getElementById("intro-overlay").style.display = "none", 800);
+    document.getElementById("romanticAudio").play().catch(() => {});
+    
     setTimeout(() => {
         const trans = document.getElementById("special-transition");
         trans.classList.add("active");
@@ -88,7 +107,8 @@ document.getElementById("start-btn").onclick = () => {
 // Carta
 const textoCarta = "Não importa a distância ou o tempo, meu coração sempre soube o caminho de volta para você. Você é minha melhor escolha todos os dias. Eu te amo muito! ❤️";
 document.getElementById("envelope").onclick = () => {
-    const isOpen = document.getElementById("envelope").classList.toggle("open");
+    const env = document.getElementById("envelope");
+    const isOpen = env.classList.toggle("open");
     const txt = document.getElementById("typewriter-text");
     txt.innerHTML = "";
     if (isOpen) {
@@ -98,15 +118,16 @@ document.getElementById("envelope").onclick = () => {
     }
 };
 
-// Pedido e Música
-document.getElementById("final-surprise-btn").onclick = () => document.getElementById("proposal-modal").classList.add("show");
-document.getElementById("btn-no").onclick = () => document.getElementById("error-msg").style.display = "block";
-document.getElementById("btn-yes").onclick = () => {
-    document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2><p>Te amo para sempre!</p>";
+// Música e Pergunta
+document.getElementById("music-btn").onclick = () => {
+    const a = document.getElementById("romanticAudio");
+    if (a.paused) { a.play(); document.getElementById("music-btn").innerText = "⏸️"; }
+    else { a.pause(); document.getElementById("music-btn").innerText = "▶️"; }
 };
 
-const audio = document.getElementById("romanticAudio");
-document.getElementById("music-btn").onclick = () => {
-    if (audio.paused) { audio.play(); document.getElementById("music-btn").innerText = "⏸️ Pausar"; }
-    else { audio.pause(); document.getElementById("music-btn").innerText = "▶️ Tocar"; }
+document.getElementById("final-surprise-btn").onclick = () => document.getElementById("proposal-modal").classList.add("show");
+document.getElementById("btn-yes").onclick = () => {
+    document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2><p>Te amo!</p>";
 };
+document.getElementById("btn-no").onclick = () => document.getElementById("error-msg").style.display = "block";
+document.getElementById("theme-toggle").onclick = () => document.body.classList.toggle("light-mode");
