@@ -3,104 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosso Amor ✨</title>
+    <title>Para Maria ❤️</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode">
+<body>
 
     <div id="intro-overlay">
         <div class="intro-card">
-            <div class="intro-icon">✨</div>
-            <h2 class="dancing-text">Nossa História em um clique...</h2>
-            <p class="intro-subtext">Prepare o coração para recordar nossos momentos.</p>
-            <button id="start-btn">Entrar na Nossa História</button>
-        </div>
-    </div>
-
-    <div id="special-transition">
-        <div class="special-content">
-            <h1 class="special-name">Maria</h1>
-            <p class="special-phrase">Você é minha melhor escolha</p>
+            <h1 class="dancing-text">Para o meu amor...</h1>
+            <button id="start-btn">Entrar no nosso mundo ✨</button>
         </div>
     </div>
 
     <div id="particles-container"></div>
 
-    <main class="container">
-        <header>
-            <h1 class="title">Nossa História</h1>
-            
-            <div id="timer">
-                <div class="time-block"><span id="days">00</span><small>Dias</small></div>
-                <div class="time-block"><span id="hours">00</span><small>Horas</small></div>
-                <div class="time-block"><span id="minutes">00</span><small>Min</small></div>
-                <div class="time-block"><span id="seconds">00</span><small>Seg</small></div>
-            </div>
+    <div class="container">
+        <h1 class="title">Maria</h1>
+        <p style="text-align: center; opacity: 0.8;">Você é minha melhor escolha</p>
 
-            <section class="letter-section">
-                <div class="envelope-wrapper">
-                    <div id="envelope" class="close">
-                        <div class="front flap"></div>
-                        <div class="front pocket"></div>
-                        <div class="letter">
-                            <div class="letter-border">
-                                <div class="letter-content">
-                                    <p class="letter-title">Para o meu amor...</p>
-                                    <p id="typewriter-text" class="letter-text"></p>
-                                    <span class="letter-stamp">💜</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p class="instruction">Toque para abrir 💌</p>
-            </section>
-        </header>
-
-        <section class="timeline" id="main-timeline"></section>
-
-        <section class="gallery-section">
-            <h2 class="section-title">Nossos Momentos</h2>
-            <div class="admin-controls">
-                <label for="imageInput" class="upload-btn">✨ Adicionar Foto</label>
-                <input type="file" id="imageInput" accept="image/*" style="display: none;">
-            </div>
-            <div class="gallery-grid" id="galleryGrid"></div>
-        </section>
-
-        <div class="final-action" id="final-action-container" style="display: none; text-align: center; margin: 60px 0;">
-            <button id="final-surprise-btn">Tenho uma última pergunta... ✨</button>
+        <h2 class="section-title">Nossa História</h2>
+        
+        <div id="timer">
+            <div class="time-block"><span id="days">00</span><small>Dias</small></div>
+            <div class="time-block"><span id="hours">00</span><small>Horas</small></div>
+            <div class="time-block"><span id="minutes">00</span><small>Min</small></div>
+            <div class="time-block"><span id="seconds">00</span><small>Seg</small></div>
         </div>
-    </main>
+
+        <div class="envelope-wrapper">
+            <div id="envelope">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+                <div class="letter">
+                    <p class="letter-text" id="typewriter-text"></p>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: -80px; margin-bottom: 40px;">Toque para abrir 💌</p>
+
+        <div class="timeline" id="main-timeline"></div>
+
+        <h2 class="section-title">Nossos Momentos</h2>
+        <div style="text-align: center;">
+            <label for="imageInput" class="upload-btn">
+                <span>✨ Adicionar Foto</span>
+                <input type="file" id="imageInput" accept="image/*" hidden>
+            </label>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+
+    <div id="special-transition">
+        <h1 class="special-name">Maria...</h1>
+    </div>
 
     <div id="proposal-modal">
         <div class="proposal-card">
             <h2>Quer voltar comigo? 🥺❤️</h2>
-            <div class="proposal-buttons">
+            <div style="margin-top: 20px;">
                 <button id="btn-yes">Sim!</button>
                 <button id="btn-no">Não</button>
             </div>
-            <p id="error-msg" style="display:none; color:red; margin-top:10px;">Erro: Apenas "SIM" é aceito! 🥰</p>
         </div>
     </div>
 
     <div class="music-player">
-        <p>Nossa Música 🎵</p>
-        <audio id="romanticAudio" loop></audio>
-        <div class="music-controls">
-            <button id="music-btn">▶️ Tocar</button>
-            <label for="musicInput" class="music-upload-label">📁</label>
-            <input type="file" id="musicInput" accept="audio/*" style="display: none;">
+        <p style="margin: 0 0 5px 0; font-weight: bold;">Nossa Música 🎵</p>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="music-btn">▶️</button>
+            <span>Selecione uma música</span>
         </div>
-        <div id="music-name">Selecione uma música</div>
     </div>
 
     <button id="theme-toggle">🌙</button>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    
+    <audio id="romanticAudio" loop>
+        <source src="sua-musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
