@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Amor ✨</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+
+    <div id="intro-overlay">
+        <div class="intro-card">
+            <div class="intro-icon">✨</div>
+            <h2 class="dancing-text">Nossa História em um clique...</h2>
+            <p class="intro-subtext">Prepare o coração para recordar nossos momentos.</p>
+            <button id="start-btn">Entrar na Nossa História</button>
+        </div>
+    </div>
+
+    <div id="special-transition">
+        <div class="special-content">
+            <h1 class="special-name">Maria</h1>
+            <p class="special-phrase">Você é minha melhor escolha</p>
+        </div>
+    </div>
+
+    <div id="particles-container"></div>
+
+    <main class="container">
+        <header>
+            <h1 class="title">Nossa História</h1>
+            
+            <div id="timer">
+                <div class="time-block"><span id="days">00</span><small>Dias</small></div>
+                <div class="time-block"><span id="hours">00</span><small>Horas</small></div>
+                <div class="time-block"><span id="minutes">00</span><small>Min</small></div>
+                <div class="time-block"><span id="seconds">00</span><small>Seg</small></div>
+            </div>
+
+            <section class="letter-section">
+                <div class="envelope-wrapper">
+                    <div id="envelope" class="close">
+                        <div class="front flap"></div>
+                        <div class="front pocket"></div>
+                        <div class="letter">
+                            <div class="letter-border">
+                                <div class="letter-content">
+                                    <p class="letter-title">Para o meu amor...</p>
+                                    <p id="typewriter-text" class="letter-text"></p>
+                                    <span class="letter-stamp">💜</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="instruction">Toque para abrir 💌</p>
+            </section>
+        </header>
+
+        <section class="timeline" id="main-timeline"></section>
+
+        <section class="gallery-section">
+            <h2 class="section-title">Nossos Momentos</h2>
+            <div class="admin-controls">
+                <label for="imageInput" class="upload-btn">✨ Adicionar Foto</label>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </section>
+
+        <div class="final-action" id="final-action-container" style="text-align: center; margin: 60px 0; display: none;">
+            <button id="final-surprise-btn">Tenho uma última pergunta... ✨</button>
+        </div>
+    </main>
+
+    <div id="proposal-modal">
+        <div class="proposal-card">
+            <h2>Quer voltar comigo? 🥺❤️</h2>
+            <div class="proposal-buttons">
+                <button id="btn-yes">Sim!</button>
+                <button id="btn-no">Não</button>
+            </div>
+            <p id="error-msg">Erro: Apenas a opção "SIM" é aceita por este coração! 🥰</p>
+        </div>
+    </div>
+
+    <div class="music-player">
+        <p>Nossa Música 🎵</p>
+        <audio id="romanticAudio" loop></audio>
+        <div class="music-controls">
+            <button id="music-btn">▶️ Tocar</button>
+            <label for="musicInput" class="music-upload-label">📁</label>
+            <input type="file" id="musicInput" accept="audio/*" style="display: none;">
+        </div>
+        <div id="music-name">Selecione uma música</div>
+    </div>
+
+    <button id="theme-toggle">🌙</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
