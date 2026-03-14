@@ -1,4 +1,4 @@
-// 0. CONFIGURAÇÃO FIREBASE (Conexão com o banco)
+// 0. CONFIGURAÇÃO FIREBASE (Conectando ao seu banco)
 const firebaseConfig = {
     apiKey: "AIzaSyAHIBRXgI7LZZO-9kUEPnFMJUsH8Jkd21w",
     authDomain: "marias2.firebaseapp.com",
@@ -11,7 +11,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// 1. DADOS ORIGINAIS RESTAURADOS
+// 1. DADOS ORIGINAIS
 const dataInicio = new Date(2024, 9, 18, 20, 20, 0); 
 const historia = [
     { data: "18/09/2024", texto: "Nosso primeiro beijo. Onde tudo realmente começou... " },
@@ -27,7 +27,7 @@ const historia = [
 ];
 const textoCarta = "Não importa a distância ou o tempo que ficarmos longe, meu coração sempre soube o caminho de volta para você. Você é minha melhor escolha todos os dias. Depois de todo esse tempo juntos, eu ainda continuo me apaixonando mais e mais por você a cada dia. Obrigado por ser meu lar. ❤️";
 
-// 2. GERAR TIMELINE (Original)
+// 2. TIMELINE (Aparecendo as datas em negrito conforme seu código)
 const timelineContainer = document.getElementById("main-timeline");
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add("visible"); });
@@ -42,128 +42,96 @@ historia.forEach(item => {
 });
 
 // 3. TIMER
-function atualizarContador() {
+setInterval(() => {
     const dif = new Date() - dataInicio;
     document.getElementById("days").innerText = Math.floor(dif / 86400000).toString().padStart(2,'0');
     document.getElementById("hours").innerText = Math.floor((dif % 86400000) / 3600000).toString().padStart(2,'0');
     document.getElementById("minutes").innerText = Math.floor((dif % 3600000) / 60000).toString().padStart(2,'0');
     document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000).toString().padStart(2,'0');
-}
-setInterval(atualizarContador, 1000);
+}, 1000);
 
-// 4. ENVELOPE (Lógica original de digitação)
+// 4. ENVELOPE
 let typingTimeout;
-const envelope = document.getElementById("envelope");
-const target = document.getElementById("typewriter-text");
-envelope.addEventListener("click", () => {
-    const isOpen = envelope.classList.toggle("open");
+document.getElementById("envelope").onclick = function() {
+    const isOpen = this.classList.toggle("open");
+    const target = document.getElementById("typewriter-text");
     clearTimeout(typingTimeout);
     if (isOpen) {
-        target.innerHTML = "";
-        let i = 0;
-        function type() {
-            if (i < textoCarta.length) {
-                target.innerHTML += textoCarta.charAt(i); i++;
-                typingTimeout = setTimeout(type, 50);
-            }
-        }
+        target.innerHTML = ""; let i = 0;
+        const type = () => {
+            if (i < textoCarta.length) { target.innerHTML += textoCarta.charAt(i++); typingTimeout = setTimeout(type, 50); }
+        };
         setTimeout(type, 800);
     } else { target.innerHTML = ""; }
-});
+};
 
-// 5. LÓGICA DA GALERIA COM FIREBASE (SALVAMENTO REAL)
+// 5. GALERIA FIREBASE (O que faz salvar de verdade)
 const imageInput = document.getElementById("imageInput");
-const galleryGrid = document.getElementById("galleryGrid");
-
-// Quando escolher uma foto, envia para o Firebase
 imageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = (event) => {
-            database.ref('galeria').push({
-                image: event.target.result,
-                timestamp: Date.now()
-            });
-        };
+        reader.onload = (ev) => database.ref('galeria').push({ image: ev.target.result });
         reader.readAsDataURL(file);
     }
 });
 
-// Escuta o banco de dados e mostra as fotos na tela automaticamente
-database.ref('galeria').on('child_added', (snapshot) => {
-    const data = snapshot.val();
-    const key = snapshot.key;
-    
+database.ref('galeria').on('child_added', (snap) => {
     const card = document.createElement("div");
-    card.className = "photo-card";
-    card.id = key;
-    card.innerHTML = `
-        <img src="${data.image}">
-        <button class="delete-photo" onclick="removerFoto('${key}')">✕</button>
-    `;
-    galleryGrid.appendChild(card);
+    card.className = "photo-card"; card.id = snap.key;
+    card.innerHTML = `<img src="${snap.val().image}"><button class="delete-photo" onclick="database.ref('galeria/${snap.key}').remove()">✕</button>`;
+    document.getElementById("galleryGrid").appendChild(card);
+});
+database.ref('galeria').on('child_removed', (snap) => {
+    const el = document.getElementById(snap.key); if(el) el.remove();
 });
 
-// Função para apagar do banco
-window.removerFoto = (key) => {
-    if(confirm("Deseja apagar essa foto da nossa história?")) {
-        database.ref('galeria/' + key).remove();
-    }
-};
-
-database.ref('galeria').on('child_removed', (snapshot) => {
-    const el = document.getElementById(snapshot.key);
-    if(el) el.remove();
-});
-
-// 6. OUTROS CONTROLES (Início, Som, Temas)
-document.getElementById("start-btn").addEventListener("click", () => {
+// 6. INÍCIO E SURPRESA (Lógica dos 50 segundos)
+document.getElementById("start-btn").onclick = () => {
     const intro = document.getElementById("intro-overlay");
     intro.style.opacity = "0";
     setTimeout(() => {
         intro.remove();
-        // Lógica da surpresa de 50 segundos (original)
+        // Contar 50s para a surpresa
         setTimeout(() => {
             const special = document.getElementById("special-transition");
             special.classList.add("active");
             setTimeout(() => special.classList.add("show-text"), 500);
             setTimeout(() => {
                 special.classList.remove("active");
+                // Mostrar botão de pergunta só agora
                 document.getElementById("final-action-container").style.display = "block";
             }, 7000);
         }, 50000);
     }, 1000);
-});
+};
+
+// 7. MODAL E MÚSICA
+document.getElementById("final-surprise-btn").onclick = () => document.getElementById("proposal-modal").classList.add("show");
+document.getElementById("btn-no").onclick = () => document.getElementById("error-msg").style.display = "block";
+document.getElementById("btn-yes").onclick = () => {
+    document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2>";
+};
 
 const audio = document.getElementById("romanticAudio");
-const musicBtn = document.getElementById("music-btn");
-musicBtn.addEventListener("click", () => {
-    if (audio.paused) { audio.play(); musicBtn.innerText = "⏸️ Pausar"; }
-    else { audio.pause(); musicBtn.innerText = "▶️ Tocar"; }
-});
+document.getElementById("music-btn").onclick = () => {
+    if (audio.paused) { audio.play(); document.getElementById("music-btn").innerText = "⏸️ Pausar"; }
+    else { audio.pause(); document.getElementById("music-btn").innerText = "▶️ Tocar"; }
+};
 
-document.getElementById("musicInput").addEventListener("change", (e) => {
+document.getElementById("musicInput").onchange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-        audio.src = URL.createObjectURL(file);
-        document.getElementById("music-name").innerText = file.name;
-        audio.play(); musicBtn.innerText = "⏸️ Pausar";
-    }
-});
+    if (file) { audio.src = URL.createObjectURL(file); audio.play(); }
+};
 
-document.getElementById("theme-toggle").addEventListener("click", () => {
-    document.body.classList.toggle("light-mode");
-});
+document.getElementById("theme-toggle").onclick = () => document.body.classList.toggle("light-mode");
 
-// PARTÍCULAS LEVES DO FUNDO
+// CORAÇÕES
 setInterval(() => {
     const c = document.getElementById("particles-container");
     const h = document.createElement("div");
-    h.className = "floating-heart";
-    h.innerHTML = ['💜', '💙', '✨'][Math.floor(Math.random() * 3)];
+    h.className = "floating-heart"; h.innerHTML = "💜";
     h.style.left = Math.random() * 100 + "vw";
-    h.style.fontSize = (Math.random() * 15 + 10) + "px";
     h.style.animationDuration = (Math.random() * 3 + 4) + "s";
     c.appendChild(h);
     setTimeout(() => h.remove(), 5000);
