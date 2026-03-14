@@ -1,49 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosso Amor ✨</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-<body class="dark-mode">
 
-    <div id="intro-overlay">
-        <div class="intro-card">
-            <div class="intro-icon">✨</div>
-            <h2 class="dancing-text">Nossa História em um clique...</h2>
-            <p class="intro-subtext">Prepare o coração para recordar nossos momentos.</p>
-            <button id="start-btn">Entrar na Nossa História</button>
-        </div>
-    </div>
-
-    <div id="special-transition">
-        <div class="special-content">
-            <h1 class="special-name">Maria</h1>
-            <p class="special-phrase">Você é minha melhor escolha</p>
-        </div>
-    </div>
-
-    <div id="particles-container"></div>
-
-    <main class="container">
-        <header>
-            <h1 class="title">Nossa História</h1>
-            
-            <div id="timer">
-                <div class="time-block"><span id="days">00</span><small>Dias</small></div>
-                <div class="time-block"><span id="hours">00</span><small>Horas</small></div>
-                <div class="time-block"><span id="minutes">00</span><small>Min</small></div>
-                <div class="time-block"><span id="seconds">00</span><small>Seg</small></div>
-            </div>
-
-            <section class="letter-section">
-                <div class="envelope-wrapper">
-                    <div id="envelope" class="close">
-                        <div class="front flap"></div>
-                        <div class="front pocket"></div>
-                        <div class="letter">
                             <div class="letter-border">
                                 <div class="letter-content">
                                     <p class="letter-title">Para o meu amor...</p>
@@ -63,6 +18,11 @@
         <section class="gallery-section">
             <h2 class="section-title">Nossos Momentos</h2>
             <div class="admin-controls">
+                <div style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px;">
+                    <input type="date" id="eventDate" style="padding: 10px; border-radius: 10px; border: 1px solid var(--accent-purple); background: rgba(0,0,0,0.3); color: white;">
+                    <input type="text" id="imageCaption" placeholder="Escreva uma legenda..." style="padding: 10px; border-radius: 10px; border: 1px solid var(--accent-purple); background: rgba(0,0,0,0.3); color: white;">
+                </div>
+                
                 <label for="imageInput" class="upload-btn">✨ Adicionar Foto</label>
                 <input type="file" id="imageInput" accept="image/*" style="display: none;">
             </div>
