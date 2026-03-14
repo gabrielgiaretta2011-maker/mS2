@@ -1,4 +1,4 @@
-// --- 1. CONFIGURAÇÃO FIREBASE ---
+// --- 1. CONFIGURAÇÃO FIREBASE (PROJETO MARIAS2) ---
 const firebaseConfig = {
     apiKey: "AIzaSyAHIBRXgI7LZZO-9kUEPnFMJUsH8Jkd21w",
     authDomain: "marias2.firebaseapp.com",
@@ -9,11 +9,10 @@ const firebaseConfig = {
     databaseURL: "https://marias2-default-rtdb.firebaseio.com" 
 };
 
-// Inicialização segura
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// --- 2. DADOS DA HISTÓRIA (TODAS AS 10 DATAS) ---
+// --- 2. TODAS AS 10 DATAS DA HISTÓRIA ---
 const historia = [
     { data: "18/09/2024", texto: "Nosso primeiro beijo. Onde tudo realmente começou... " },
     { data: "18/10/2024", texto: "O início oficial de tudo. a partir desse dia começamos a namorar. ✨" },
@@ -27,26 +26,17 @@ const historia = [
     { data: "Hoje", texto: "Construindo nosso futuro um bit de cada vez. 💻❤️" }
 ];
 
-// --- 3. RENDERIZAR TIMELINE ---
+// Gerar Timeline na Tela
 const timelineContainer = document.getElementById("main-timeline");
-function carregarTimeline() {
-    timelineContainer.innerHTML = "";
-    historia.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "timeline-item";
-        div.innerHTML = `
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-                <strong style="color: var(--accent-purple);">${item.data}</strong>
-                <p style="font-size: 0.85rem; margin-top: 5px;">${item.texto}</p>
-            </div>
-        `;
-        timelineContainer.appendChild(div);
-    });
-}
-carregarTimeline();
+historia.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "timeline-item";
+    div.style.opacity = "1";
+    div.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><strong style="color:#a78bfa;">${item.data}</strong><p style="font-size:0.85rem;margin-top:5px;color:white;">${item.texto}</p></div>`;
+    timelineContainer.appendChild(div);
+});
 
-// --- 4. CRONÔMETRO ---
+// --- 3. CRONÔMETRO ---
 const dataInicio = new Date(2024, 9, 18, 20, 20, 0); 
 function atualizarContador() {
     const dif = new Date() - dataInicio;
@@ -58,7 +48,7 @@ function atualizarContador() {
 setInterval(atualizarContador, 1000);
 atualizarContador();
 
-// --- 5. LÓGICA DA CARTA ---
+// --- 4. CARTA COM EFEITO TYPEWRITER ---
 const textoCarta = "Não importa a distância ou o tempo, meu coração sempre soube o caminho de volta para você. Você é minha melhor escolha todos os dias. Eu te amo muito! ❤️";
 const envelope = document.getElementById("envelope");
 const typewriterText = document.getElementById("typewriter-text");
@@ -68,98 +58,78 @@ envelope.onclick = () => {
     if (isOpen) {
         let i = 0;
         function type() {
-            if (i < textoCarta.length) {
-                typewriterText.innerHTML += textoCarta.charAt(i++);
-                setTimeout(type, 50);
-            }
+            if (i < textoCarta.length) { typewriterText.innerHTML += textoCarta.charAt(i++); setTimeout(type, 50); }
         }
         setTimeout(type, 800);
     }
 };
 
-// --- 6. GALERIA FIREBASE (MODO TEXTO PARA PLANO GRÁTIS) ---
+// --- 5. CORAÇÕES FLUTUANTES ---
+function createHeart() {
+    const container = document.getElementById("particles-container");
+    if (!container) return;
+    const heart = document.createElement("div");
+    heart.className = "floating-heart";
+    heart.innerHTML = ['💜', '💙', '✨', '❤️'][Math.floor(Math.random() * 4)];
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.position = "fixed";
+    heart.style.bottom = "-20px";
+    heart.style.zIndex = "100";
+    heart.style.animation = `floatUp ${Math.random() * 3 + 3}s linear forwards`;
+    container.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+}
+setInterval(createHeart, 400);
+
+// --- 6. GALERIA FIREBASE ---
 const imageInput = document.getElementById("imageInput");
 const galleryGrid = document.getElementById("galleryGrid");
-
 imageInput.onchange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 1000000) { alert("Escolha uma foto menor que 1MB!"); return; }
-
+    if (!file || file.size > 1000000) { alert("Escolha uma foto menor que 1MB!"); return; }
     const reader = new FileReader();
-    const btnLabel = document.querySelector(".upload-btn");
-    btnLabel.innerText = "Salvando... ❤️";
-
-    reader.onload = async (event) => {
-        try {
-            await database.ref('galeria').push({ url: event.target.result });
-            btnLabel.innerText = "✨ Adicionar Foto";
-        } catch (error) {
-            alert("Erro nas Regras do Firebase!");
-            btnLabel.innerText = "✨ Adicionar Foto";
-        }
+    const btn = document.querySelector(".upload-btn");
+    btn.innerText = "Salvando... ❤️";
+    reader.onload = async (ev) => {
+        await database.ref('galeria').push({ url: ev.target.result });
+        btn.innerText = "✨ Adicionar Foto";
     };
     reader.readAsDataURL(file);
 };
-
-// Escutar fotos novas
-database.ref('galeria').on('child_added', (snapshot) => {
+database.ref('galeria').on('child_added', (snap) => {
     const div = document.createElement("div");
     div.className = "photo-card";
-    div.innerHTML = `<img src="${snapshot.val().url}">`;
+    div.innerHTML = `<img src="${snap.val().url}" style="width:100%; border-radius:10px;">`;
     galleryGrid.appendChild(div);
 });
 
-// --- 7. SURPRESA E INTERAÇÕES ---
-document.getElementById("start-btn").onclick = () => {
-    document.getElementById("intro-overlay").style.opacity = "0";
-    setTimeout(() => document.getElementById("intro-overlay").style.display = "none", 500);
-    document.getElementById("romanticAudio").play().catch(() => {});
-    
-    // Timer surpresa 50s
+// --- 7. SURPRESA APÓS 50 SEGUNDOS ---
+function dispararSurpresa() {
+    const trans = document.getElementById("special-transition");
+    trans.classList.add("active");
+    setTimeout(() => trans.classList.add("show-text"), 1000);
     setTimeout(() => {
-        const trans = document.getElementById("special-transition");
-        trans.classList.add("active");
-        setTimeout(() => trans.classList.add("show-text"), 1000);
-        setTimeout(() => {
-            trans.classList.remove("active");
-            document.getElementById("final-action-container").style.display = "block";
-        }, 7000);
-    }, 50000);
+        trans.classList.remove("active");
+        document.getElementById("final-action-container").style.display = "block";
+    }, 8000);
+}
+
+document.getElementById("start-btn").onclick = () => {
+    document.getElementById("intro-overlay").style.display = "none";
+    document.getElementById("romanticAudio").play().catch(() => {});
+    setTimeout(dispararSurpresa, 50000); 
 };
 
+// --- 8. PERGUNTA FINAL E INTERAÇÕES ---
 document.getElementById("final-surprise-btn").onclick = () => document.getElementById("proposal-modal").classList.add("show");
 document.getElementById("btn-no").onclick = () => document.getElementById("error-msg").style.display = "block";
 document.getElementById("btn-yes").onclick = () => {
     document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2><p>Te amo para sempre!</p>";
 };
 
-// MÚSICA E TEMA
+document.getElementById("theme-toggle").onclick = () => document.body.classList.toggle("light-mode");
 const audio = document.getElementById("romanticAudio");
 document.getElementById("music-btn").onclick = () => {
     if (audio.paused) { audio.play(); document.getElementById("music-btn").innerText = "⏸️ Pausar"; }
     else { audio.pause(); document.getElementById("music-btn").innerText = "▶️ Tocar"; }
 };
-document.getElementById("musicInput").onchange = (e) => {
-    if(e.target.files[0]){
-        audio.src = URL.createObjectURL(e.target.files[0]);
-        audio.play();
-    }
-};
-document.getElementById("theme-toggle").onclick = () => document.body.classList.toggle("light-mode");
-
-// CORAÇÕES
-function createHeart() {
-    const container = document.getElementById("particles-container");
-    if(!container) return;
-    const heart = document.createElement("div");
-    heart.className = "floating-heart";
-    heart.innerHTML = ['💜', '💙', '✨', '❤️'][Math.floor(Math.random()*4)];
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.position = "fixed";
-    heart.style.bottom = "-20px";
-    heart.style.animation = `floatUp ${Math.random() * 3 + 3}s linear forwards`;
-    container.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
-}
-setInterval(createHeart, 400);
