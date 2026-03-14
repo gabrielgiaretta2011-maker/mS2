@@ -1,82 +1,56 @@
 :root {
-    --bg-color: #0f172a;
-    --card-bg: rgba(30, 41, 59, 0.7);
-    --text-color: #f1f5f9;
+    --bg-color: #0b1120;
+    --card-bg: rgba(30, 41, 59, 0.4);
     --accent-purple: #a78bfa;
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-color: #f1f5f9;
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
-body.light-mode {
-    --bg-color: #f8fafc;
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --text-color: #1e293b;
-    --accent-purple: #7c3aed;
-}
+body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
 
-body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; transition: 0.5s; }
+/* Botão de Entrada Estilo "Vazado" */
+#intro-overlay { position: fixed; inset: 0; background: #0b1120; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+.intro-card { text-align: center; background: rgba(255, 255, 255, 0.03); padding: 50px; border-radius: 40px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
+#start-btn { background: transparent; border: 1px solid var(--accent-purple); color: var(--accent-purple); padding: 12px 35px; border-radius: 50px; cursor: pointer; font-weight: 600; margin-top: 25px; transition: 0.3s; box-shadow: 0 0 15px rgba(167, 139, 250, 0.2); }
+#start-btn:hover { background: var(--accent-purple); color: white; box-shadow: 0 0 25px rgba(167, 139, 250, 0.5); }
 
-/* Entrada Bonitona */
-#intro-overlay { position: fixed; inset: 0; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 1s; }
-.intro-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; text-align: center; border: 1px solid var(--glass-border); }
-.intro-icon { font-size: 3rem; margin-bottom: 10px; }
-.dancing-text { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--accent-purple); margin: 10px 0; }
-
-/* Container e Títulos */
-.container { width: 90%; max-width: 800px; margin: 20px auto; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 30px; border: 1px solid var(--glass-border); }
-.title { font-family: 'Dancing Script', cursive; font-size: 4rem; color: var(--accent-purple); text-align: center; }
-
-/* Cronômetro */
-#timer { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
-.time-block { border: 1px solid var(--accent-purple); padding: 10px; border-radius: 12px; min-width: 70px; text-align: center; background: rgba(167,139,250,0.1); }
-.time-block span { display: block; font-size: 1.8rem; font-weight: bold; color: var(--accent-purple); }
-
-/* Envelope */
-.envelope-wrapper { height: 180px; margin-bottom: 100px; display: flex; justify-content: center; position: relative; }
-#envelope { position: relative; width: 280px; height: 180px; background: #7c3aed; border-radius: 0 0 5px 5px; cursor: pointer; }
-.flap { position: absolute; top: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; border-top: 110px solid #7c3aed; transform-origin: top; transition: 0.4s; z-index: 3; }
-.pocket { position: absolute; bottom: 0; border-left: 140px solid #a78bfa; border-right: 140px solid #a78bfa; border-bottom: 90px solid #6d28d9; border-top: 90px solid transparent; z-index: 4; }
-.letter { position: absolute; background: #fff; width: 90%; height: 80%; left: 5%; top: 10%; transition: 0.6s; z-index: 2; opacity: 0; padding: 20px; overflow: hidden; }
-#envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-#envelope.open .letter { transform: translateY(-180px); width: 350px; height: 450px; left: -35px; opacity: 1; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.letter-title { color: #6d28d9; font-family: 'Dancing Script'; font-size: 1.8rem; margin-bottom: 10px; }
-.letter-text { color: #333; font-style: italic; line-height: 1.5; }
-
-/* Timeline Animada */
-.timeline-item { opacity: 0; transform: translateY(30px); transition: 0.8s ease; margin-bottom: 30px; display: flex; justify-content: center; position: relative; }
+/* Timeline Bonitinha (Igual à foto) */
+.timeline { position: relative; padding: 40px 0; }
+.timeline::before { content: ''; position: absolute; left: 50%; width: 2px; height: 100%; background: var(--accent-purple); opacity: 0.2; transform: translateX(-50%); }
+.timeline-item { width: 100%; display: flex; justify-content: center; margin-bottom: 40px; position: relative; opacity: 0; transform: translateY(20px); transition: 0.8s; }
 .timeline-item.visible { opacity: 1; transform: translateY(0); }
-.timeline-content { width: 45%; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); }
-.timeline-dot { position: absolute; left: 50%; width: 12px; height: 12px; background: var(--accent-purple); border-radius: 50%; transform: translateX(-50%); top: 15px; }
+.timeline-content { width: 42%; background: var(--card-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--glass-border); backdrop-filter: blur(5px); }
+.timeline-item:nth-child(even) { justify-content: flex-end; }
+.timeline-item:nth-child(odd) { justify-content: flex-start; }
+.timeline-dot { position: absolute; left: 50%; width: 12px; height: 12px; background: var(--accent-purple); border-radius: 50%; transform: translateX(-50%); top: 20px; box-shadow: 0 0 10px var(--accent-purple); }
 
-/* Galeria */
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
-.photo-card { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent-purple); height: 150px; }
-.photo-card img { width: 100%; height: 100%; object-fit: cover; }
-.delete-photo { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; cursor: pointer; }
-
-/* Transição Especial */
-#special-transition { position: fixed; inset: 0; background: black; z-index: 10001; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 1.5s; }
+/* Transição Especial ROXA e CENTRALIZADA */
+#special-transition { position: fixed; inset: 0; background: #000; z-index: 10001; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; pointer-events: none; transition: 1.5s; }
 #special-transition.active { opacity: 1; pointer-events: auto; }
-.special-name { color: white; font-family: 'Dancing Script'; font-size: 4rem; opacity: 0; transform: translateY(20px); transition: 2s; }
-#special-transition.show-text .special-name { opacity: 1; transform: translateY(0); }
+.special-name { color: var(--accent-purple); font-family: 'Dancing Script'; font-size: 5rem; margin-bottom: 0; opacity: 0; transform: scale(0.8); transition: 2s; }
+.special-phrase { color: #f1f5f9; opacity: 0; transition: 2s; font-size: 1.2rem; margin-top: 10px; }
+#special-transition.show-text .special-name, #special-transition.show-text .special-phrase { opacity: 1; transform: scale(1); }
 
-/* Modal Pedido */
-#proposal-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 10002; }
-#proposal-modal.show { display: flex; }
-.proposal-card { background: white; padding: 40px; border-radius: 20px; text-align: center; color: #333; }
-.proposal-buttons button { padding: 10px 25px; margin: 10px; border-radius: 50px; border: none; cursor: pointer; font-weight: bold; }
-#btn-yes { background: var(--accent-purple); color: white; }
+/* Botão da Última Pergunta */
+#final-action-container { text-align: center; padding: 40px 0; }
+#final-surprise-btn { background: var(--accent-purple); color: white; border: none; padding: 15px 35px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(167, 139, 250, 0.3); transition: 0.3s; }
 
-/* Player */
-.music-player { position: fixed; bottom: 20px; left: 20px; background: var(--card-bg); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); z-index: 1000; }
-.music-upload-label { background: var(--accent-purple); padding: 5px 10px; border-radius: 10px; cursor: pointer; font-size: 0.7rem; }
+/* Player de Música Estiloso */
+.music-player { position: fixed; bottom: 20px; left: 20px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); z-index: 1000; min-width: 200px; }
+.music-controls { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+#music-btn { background: var(--accent-purple); border: none; color: white; padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; }
+.music-label { background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 12px; cursor: pointer; }
 
-/* Partículas */
-#particles-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.floating-heart { position: absolute; bottom: -20px; animation: floatUp linear forwards; }
+/* Envelope e Outros */
+.container { width: 92%; max-width: 800px; margin: 20px auto; background: var(--card-bg); border-radius: 30px; padding: 30px; border: 1px solid var(--glass-border); }
+.title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--accent-purple); text-align: center; margin-bottom: 10px; }
+.time-block span { font-size: 1.8rem; color: var(--accent-purple); font-weight: 700; }
+.floating-heart { position: absolute; bottom: -20px; animation: floatUp linear forwards; pointer-events: none; }
 @keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
 
 @media (max-width: 600px) {
-    #envelope.open .letter { width: 300px; left: -10px; }
-    .timeline-item { justify-content: flex-start; padding-left: 40px; }
+    .timeline::before { left: 20px; }
+    .timeline-item { justify-content: flex-start !important; padding-left: 45px; }
+    .timeline-content { width: 85%; }
     .timeline-dot { left: 20px !important; }
 }
