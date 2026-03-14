@@ -1,56 +1,61 @@
 :root {
-    --bg-color: #0b1120;
-    --card-bg: rgba(30, 41, 59, 0.4);
-    --accent-purple: #a78bfa;
+    --bg-color: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.7);
     --text-color: #f1f5f9;
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --accent-purple: #a78bfa;
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; transition: 0.5s; }
 
-/* Botão de Entrada Estilo "Vazado" */
-#intro-overlay { position: fixed; inset: 0; background: #0b1120; display: flex; justify-content: center; align-items: center; z-index: 9999; }
-.intro-card { text-align: center; background: rgba(255, 255, 255, 0.03); padding: 50px; border-radius: 40px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
-#start-btn { background: transparent; border: 1px solid var(--accent-purple); color: var(--accent-purple); padding: 12px 35px; border-radius: 50px; cursor: pointer; font-weight: 600; margin-top: 25px; transition: 0.3s; box-shadow: 0 0 15px rgba(167, 139, 250, 0.2); }
-#start-btn:hover { background: var(--accent-purple); color: white; box-shadow: 0 0 25px rgba(167, 139, 250, 0.5); }
+/* ENTRADA ORIGINAL */
+#intro-overlay { position: fixed; inset: 0; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 1s; }
+.intro-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; text-align: center; border: 1px solid var(--glass-border); }
+.dancing-text { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--accent-purple); }
+#start-btn, .main-btn { background: var(--accent-purple); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 600; margin-top: 20px; transition: 0.3s; }
+#start-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(167, 139, 250, 0.4); }
 
-/* Timeline Bonitinha (Igual à foto) */
+/* TRANSIÇÃO ROXA CENTRALIZADA */
+#special-transition { position: fixed; inset: 0; background: black; z-index: 10001; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 1.5s; text-align: center; }
+#special-transition.active { opacity: 1; pointer-events: auto; }
+.special-name { color: var(--accent-purple); font-family: 'Dancing Script'; font-size: 5rem; margin: 0; opacity: 0; transform: translateY(20px); transition: 2s; }
+.special-phrase { color: #f1f5f9; font-size: 1.2rem; opacity: 0; transition: 2s; margin-top: 10px; }
+#special-transition.show-text .special-name, #special-transition.show-text .special-phrase { opacity: 1; transform: translateY(0); }
+
+/* TIMELINE ORIGINAL (Alternada) */
 .timeline { position: relative; padding: 40px 0; }
-.timeline::before { content: ''; position: absolute; left: 50%; width: 2px; height: 100%; background: var(--accent-purple); opacity: 0.2; transform: translateX(-50%); }
-.timeline-item { width: 100%; display: flex; justify-content: center; margin-bottom: 40px; position: relative; opacity: 0; transform: translateY(20px); transition: 0.8s; }
-.timeline-item.visible { opacity: 1; transform: translateY(0); }
-.timeline-content { width: 42%; background: var(--card-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--glass-border); backdrop-filter: blur(5px); }
+.timeline::before { content: ''; position: absolute; left: 50%; width: 2px; height: 100%; background: var(--accent-purple); opacity: 0.3; }
+.timeline-item { width: 100%; display: flex; justify-content: center; margin-bottom: 30px; position: relative; opacity: 0; transition: 0.8s; }
+.timeline-item.visible { opacity: 1; }
+.timeline-content { width: 40%; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--glass-border); backdrop-filter: blur(5px); }
 .timeline-item:nth-child(even) { justify-content: flex-end; }
 .timeline-item:nth-child(odd) { justify-content: flex-start; }
 .timeline-dot { position: absolute; left: 50%; width: 12px; height: 12px; background: var(--accent-purple); border-radius: 50%; transform: translateX(-50%); top: 20px; box-shadow: 0 0 10px var(--accent-purple); }
 
-/* Transição Especial ROXA e CENTRALIZADA */
-#special-transition { position: fixed; inset: 0; background: #000; z-index: 10001; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; pointer-events: none; transition: 1.5s; }
-#special-transition.active { opacity: 1; pointer-events: auto; }
-.special-name { color: var(--accent-purple); font-family: 'Dancing Script'; font-size: 5rem; margin-bottom: 0; opacity: 0; transform: scale(0.8); transition: 2s; }
-.special-phrase { color: #f1f5f9; opacity: 0; transition: 2s; font-size: 1.2rem; margin-top: 10px; }
-#special-transition.show-text .special-name, #special-transition.show-text .special-phrase { opacity: 1; transform: scale(1); }
+/* PLAYER E BOTÕES */
+.music-player { position: fixed; bottom: 20px; left: 20px; background: var(--card-bg); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); z-index: 1000; backdrop-filter: blur(10px); }
+#music-btn { background: var(--accent-purple); color: white; border: none; border-radius: 10px; padding: 5px 15px; cursor: pointer; }
+.music-upload-label { cursor: pointer; font-size: 1.2rem; margin-left: 10px; }
 
-/* Botão da Última Pergunta */
-#final-action-container { text-align: center; padding: 40px 0; }
-#final-surprise-btn { background: var(--accent-purple); color: white; border: none; padding: 15px 35px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(167, 139, 250, 0.3); transition: 0.3s; }
+/* CONTAINER E OUTROS */
+.container { width: 95%; max-width: 800px; margin: 20px auto; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 30px; border: 1px solid var(--glass-border); }
+.title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--accent-purple); text-align: center; }
+#timer { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+.time-block { border: 1px solid var(--accent-purple); padding: 10px; border-radius: 12px; text-align: center; min-width: 65px; background: rgba(167,139,250,0.1); }
+.time-block span { display: block; font-size: 1.5rem; font-weight: bold; color: var(--accent-purple); }
 
-/* Player de Música Estiloso */
-.music-player { position: fixed; bottom: 20px; left: 20px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); z-index: 1000; min-width: 200px; }
-.music-controls { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-#music-btn { background: var(--accent-purple); border: none; color: white; padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; }
-.music-label { background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 12px; cursor: pointer; }
-
-/* Envelope e Outros */
-.container { width: 92%; max-width: 800px; margin: 20px auto; background: var(--card-bg); border-radius: 30px; padding: 30px; border: 1px solid var(--glass-border); }
-.title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--accent-purple); text-align: center; margin-bottom: 10px; }
-.time-block span { font-size: 1.8rem; color: var(--accent-purple); font-weight: 700; }
-.floating-heart { position: absolute; bottom: -20px; animation: floatUp linear forwards; pointer-events: none; }
-@keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+/* ENVELOPE */
+.envelope-wrapper { height: 180px; margin-bottom: 100px; display: flex; justify-content: center; position: relative; }
+#envelope { position: relative; width: 280px; height: 180px; background: #7c3aed; border-radius: 0 0 5px 5px; cursor: pointer; }
+.flap { position: absolute; top: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; border-top: 110px solid #7c3aed; transform-origin: top; transition: 0.4s; z-index: 3; }
+.pocket { position: absolute; bottom: 0; border-left: 140px solid #a78bfa; border-right: 140px solid #a78bfa; border-bottom: 90px solid #6d28d9; border-top: 90px solid transparent; z-index: 4; }
+.letter { position: absolute; background: #fff; width: 90%; height: 80%; left: 5%; top: 10%; transition: 0.6s; z-index: 2; opacity: 0; padding: 20px; box-sizing: border-box; color: #333; }
+#envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
+#envelope.open .letter { transform: translateY(-160px); width: 350px; height: 450px; left: -35px; opacity: 1; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
 @media (max-width: 600px) {
     .timeline::before { left: 20px; }
     .timeline-item { justify-content: flex-start !important; padding-left: 45px; }
-    .timeline-content { width: 85%; }
     .timeline-dot { left: 20px !important; }
+    .timeline-content { width: 85%; }
 }
