@@ -1,4 +1,4 @@
-// 0. CONFIGURAÇÃO FIREBASE (Conectando ao seu banco)
+// 1. CONFIGURAÇÃO FIREBASE
 const firebaseConfig = {
     apiKey: "AIzaSyAHIBRXgI7LZZO-9kUEPnFMJUsH8Jkd21w",
     authDomain: "marias2.firebaseapp.com",
@@ -8,11 +8,15 @@ const firebaseConfig = {
     appId: "1:724433124966:web:3dcb67d58e8a68f52277a7",
     databaseURL: "https://marias2-default-rtdb.firebaseio.com" 
 };
-firebase.initializeApp(firebaseConfig);
+
+if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const database = firebase.database();
 
-// 1. DADOS ORIGINAIS
-const dataInicio = new Date(2024, 9, 18, 20, 20, 0); 
+// 2. DATA E AUDIO
+const dataInicio = new Date(2024, 8, 18, 20, 20, 0); 
+const audio = document.getElementById("romanticAudio");
+
+// 3. SUA HISTÓRIA (FIXA)
 const historia = [
     { data: "18/09/2024", texto: "Nosso primeiro beijo. Onde tudo realmente começou... " },
     { data: "18/10/2024", texto: "O início oficial de tudo. a partir desse dia começamos a namorar. ✨" },
@@ -25,114 +29,85 @@ const historia = [
     { data: "18/02/2026", texto: "Minha volta definitiva para os seus braços." },
     { data: "Hoje", texto: "Construindo nosso futuro um bit de cada vez. 💻❤️" }
 ];
-const textoCarta = "Não importa a distância ou o tempo que ficarmos longe, meu coração sempre soube o caminho de volta para você. Você é minha melhor escolha todos os dias. Depois de todo esse tempo juntos, eu ainda continuo me apaixonando mais e mais por você a cada dia. Obrigado por ser meu lar. ❤️";
 
-// 2. TIMELINE (Aparecendo as datas em negrito conforme seu código)
-const timelineContainer = document.getElementById("main-timeline");
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add("visible"); });
-}, { threshold: 0.1 });
+// 4. FUNÇÃO PARA DESENHAR A TIMELINE
+function renderizarTimeline(fotosFirebase = []) {
+    const timelineContainer = document.getElementById("main-timeline");
+    if(!timelineContainer) return;
 
-historia.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "timeline-item";
-    div.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><strong>${item.data}</strong><p>${item.texto}</p></div>`;
-    timelineContainer.appendChild(div);
-    observer.observe(div);
+    timelineContainer.innerHTML = '<h2 class="section-title">Nossa Linha do Tempo</h2>';
+
+    // Adiciona os itens fixos da 'const historia'
+    historia.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "timeline-item";
+        div.innerHTML = `
+            <div class="timeline-date">${item.data}</div>
+            <div class="timeline-content"><p>${item.texto}</p></div>
+        `;
+        timelineContainer.appendChild(div);
+    });
+
+    // Adiciona as fotos que vierem do Firebase abaixo da história
+    fotosFirebase.forEach(foto => {
+        const dataFoto = new Date(foto.timestamp).toLocaleDateString('pt-BR');
+        const div = document.createElement("div");
+        div.className = "timeline-item";
+        div.innerHTML = `
+            <div class="timeline-date">${dataFoto}</div>
+            <div class="timeline-content">
+                <img src="${foto.image}" style="width:100%; border-radius:10px; margin-top:10px;">
+                <p>Novo momento adicionado! ✨</p>
+            </div>
+        `;
+        timelineContainer.appendChild(div);
+    });
+}
+
+// 5. ESCUTAR O FIREBASE E ATUALIZAR TUDO
+database.ref('galeria').on('value', (snapshot) => {
+    const galleryGrid = document.getElementById("galleryGrid");
+    galleryGrid.innerHTML = '';
+    
+    const fotos = [];
+    snapshot.forEach((child) => {
+        const data = child.val();
+        fotos.push({ key: child.key, ...data });
+
+        // Preencher a galeria de fotos
+        const card = document.createElement("div");
+        card.className = "photo-card";
+        card.innerHTML = `
+            <img src="${data.image}">
+            <button style="position:absolute;top:5px;right:5px;background:red;color:white;border:none;border-radius:50%;width:25px;height:25px;cursor:pointer;" onclick="deletePhoto('${child.key}')">✕</button>
+        `;
+        galleryGrid.appendChild(card);
+    });
+
+    // Chama a função de desenhar a timeline passando as fotos novas
+    renderizarTimeline(fotos);
 });
 
-// 3. TIMER
+// 6. RESTANTE DAS FUNÇÕES (START, TIMER, ETC)
+document.getElementById("start-btn").onclick = () => {
+    document.getElementById("intro-overlay").style.opacity = "0";
+    audio.play().catch(() => {});
+    setTimeout(() => document.getElementById("intro-overlay").remove(), 1000);
+};
+
+// Timer funcional
 setInterval(() => {
-    const dif = new Date() - dataInicio;
-    document.getElementById("days").innerText = Math.floor(dif / 86400000).toString().padStart(2,'0');
-    document.getElementById("hours").innerText = Math.floor((dif % 86400000) / 3600000).toString().padStart(2,'0');
-    document.getElementById("minutes").innerText = Math.floor((dif % 3600000) / 60000).toString().padStart(2,'0');
-    document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000).toString().padStart(2,'0');
+    const agora = new Date();
+    const dif = agora - dataInicio;
+    document.getElementById("days").innerText = Math.floor(dif / 86400000);
+    document.getElementById("hours").innerText = Math.floor((dif % 86400000) / 3600000);
+    document.getElementById("minutes").innerText = Math.floor((dif % 3600000) / 60000);
+    document.getElementById("seconds").innerText = Math.floor((dif % 60000) / 1000);
 }, 1000);
 
-// 4. ENVELOPE
-let typingTimeout;
-document.getElementById("envelope").onclick = function() {
-    const isOpen = this.classList.toggle("open");
-    const target = document.getElementById("typewriter-text");
-    clearTimeout(typingTimeout);
-    if (isOpen) {
-        target.innerHTML = ""; let i = 0;
-        const type = () => {
-            if (i < textoCarta.length) { target.innerHTML += textoCarta.charAt(i++); typingTimeout = setTimeout(type, 50); }
-        };
-        setTimeout(type, 800);
-    } else { target.innerHTML = ""; }
-};
+window.deletePhoto = (key) => { if(confirm("Apagar?")) database.ref('galeria/' + key).remove(); };
 
-// 5. GALERIA FIREBASE (O que faz salvar de verdade)
-const imageInput = document.getElementById("imageInput");
-imageInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (ev) => database.ref('galeria').push({ image: ev.target.result });
-        reader.readAsDataURL(file);
-    }
-});
-
-database.ref('galeria').on('child_added', (snap) => {
-    const card = document.createElement("div");
-    card.className = "photo-card"; card.id = snap.key;
-    card.innerHTML = `<img src="${snap.val().image}"><button class="delete-photo" onclick="database.ref('galeria/${snap.key}').remove()">✕</button>`;
-    document.getElementById("galleryGrid").appendChild(card);
-});
-database.ref('galeria').on('child_removed', (snap) => {
-    const el = document.getElementById(snap.key); if(el) el.remove();
-});
-
-// 6. INÍCIO E SURPRESA (Lógica dos 50 segundos)
-document.getElementById("start-btn").onclick = () => {
-    const intro = document.getElementById("intro-overlay");
-    intro.style.opacity = "0";
-    setTimeout(() => {
-        intro.remove();
-        // Contar 50s para a surpresa
-        setTimeout(() => {
-            const special = document.getElementById("special-transition");
-            special.classList.add("active");
-            setTimeout(() => special.classList.add("show-text"), 500);
-            setTimeout(() => {
-                special.classList.remove("active");
-                // Mostrar botão de pergunta só agora
-                document.getElementById("final-action-container").style.display = "block";
-            }, 7000);
-        }, 50000);
-    }, 1000);
-};
-
-// 7. MODAL E MÚSICA
-document.getElementById("final-surprise-btn").onclick = () => document.getElementById("proposal-modal").classList.add("show");
-document.getElementById("btn-no").onclick = () => document.getElementById("error-msg").style.display = "block";
-document.getElementById("btn-yes").onclick = () => {
-    document.querySelector(".proposal-card").innerHTML = "<h2>Sabia que diria sim! ❤️</h2>";
-};
-
-const audio = document.getElementById("romanticAudio");
 document.getElementById("music-btn").onclick = () => {
     if (audio.paused) { audio.play(); document.getElementById("music-btn").innerText = "⏸️ Pausar"; }
     else { audio.pause(); document.getElementById("music-btn").innerText = "▶️ Tocar"; }
 };
-
-document.getElementById("musicInput").onchange = (e) => {
-    const file = e.target.files[0];
-    if (file) { audio.src = URL.createObjectURL(file); audio.play(); }
-};
-
-document.getElementById("theme-toggle").onclick = () => document.body.classList.toggle("light-mode");
-
-// CORAÇÕES
-setInterval(() => {
-    const c = document.getElementById("particles-container");
-    const h = document.createElement("div");
-    h.className = "floating-heart"; h.innerHTML = "💜";
-    h.style.left = Math.random() * 100 + "vw";
-    h.style.animationDuration = (Math.random() * 3 + 4) + "s";
-    c.appendChild(h);
-    setTimeout(() => h.remove(), 5000);
-}, 600);
