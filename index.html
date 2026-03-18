@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Maria</title>
+    <title>Nosso Amor ✨</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body class="dark-mode">
+
+    <div id="long-time-notification" class="hidden-notification">
+        <p>Ainda aqui? <br> Eu também ficaria... <br> porque nossa história é a minha favorita. 💜</p>
+    </div>
 
     <div id="intro-overlay">
         <div class="intro-card">
@@ -74,19 +78,84 @@
             <div class="gallery-grid" id="galleryGrid"></div>
         </section>
 
+        <section class="emotional-support">
+            <div class="emotional-card">
+                <h3>💜 Se algum dia estivermos longe</h3>
+                <p>Volte para este site. Leia tudo de novo. E lembre: <strong>Eu sempre vou escolher você.</strong></p>
+            </div>
+
+            <div class="emotional-card">
+                <h3>💌 Quando sentir saudade</h3>
+                <p>Se algum dia a saudade apertar... clique no botão abaixo.</p>
+                <button id="saudade-btn">Clique aqui ✨</button>
+                <p id="saudade-msg" class="message-display"></p>
+            </div>
+
+            <div class="emotional-card" id="future-letter-container">
+                <h3>🕰️ Carta para o futuro</h3>
+                <div id="future-content">
+                    <p class="locked-msg">Esta carta está lacrada. <br> Só poderá ser lida em <strong>18/10/2026</strong>.</p>
+                </div>
+            </div>
+
+            <div class="emotional-card">
+                <h3>📖 Se algum dia brigarmos...</h3>
+                <p class="reveal-text" onclick="this.classList.add('active')">
+                    (Toque para revelar) 
+                    <span>Lembra que a gente já passou por tanta coisa. E mesmo assim ainda escolhemos um ao outro. O nosso amor é maior que qualquer desentendimento.</span>
+                </p>
+            </div>
+
+            <div class="emotional-card">
+                <h3>💡 Se tudo parecer difícil...</h3>
+                <p>"Lembra que a gente já venceu coisas piores. E mesmo assim continuamos aqui. Juntos."</p>
+            </div>
+        </section>
+
         <div class="final-action" id="final-action-container" style="text-align: center; margin: 60px 0; display: none;">
             <button id="final-surprise-btn">Tenho uma última pergunta... ✨</button>
         </div>
+
+        <footer class="final-thanks">
+            <p>Obrigado por existir.</p>
+            <p>Obrigado por ficar.</p>
+            <p>Obrigado por ser meu lar. 💜</p>
+        </footer>
     </main>
 
+    <div id="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox">&times;</span>
+        <img id="lightbox-img" src="">
+        <p id="lightbox-caption"></p>
+    </div>
+
     <div id="proposal-modal">
-        <div class="proposal-card">
+        <div class="proposal-card" id="card-pergunta">
             <h2>Quer voltar comigo? 🥺❤️</h2>
             <div class="proposal-buttons">
                 <button id="btn-yes">Sim!</button>
                 <button id="btn-no">Não</button>
             </div>
-            <p id="error-msg">Erro: Apenas a opção "SIM" é aceita por este coração! 🥰</p>
+            <p id="error-msg" style="display: none; color: #ff4d4d; margin-top: 15px; font-weight: bold;">Erro: Apenas a opção "SIM" é aceita por este coração! 🥰</p>
+        </div>
+
+        <div class="proposal-card" id="card-eba" style="display: none; position: relative;">
+            <button id="btn-close-final" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #777;">✕</button>
+            <h2 class="dancing-text" style="font-size: 3rem; color: #a78bfa;">EBA! 😍</h2>
+            <p style="font-size: 1.2rem; font-weight: 600;">Sabia que você diria sim!</p>
+            <p id="saudacao-final" style="font-size: 1.1rem; font-style: italic; margin-top: 15px; color: #fff;"></p>
+            <p style="font-size: 2rem; margin-top: 10px;">💖✨💜</p>
+        </div>
+    </div>
+
+    <div id="admin-login-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:20000; justify-content:center; align-items:center;">
+        <div class="proposal-card" style="max-width:320px; text-align: center;">
+            <h2 class="dancing-text" style="font-size:2.5rem; margin-bottom: 20px;">Acesso Admin</h2>
+            <input type="email" id="admin-email" placeholder="Seu e-mail" style="width:90%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #a78bfa; background:#222; color:white;">
+            <input type="password" id="admin-password" placeholder="Sua senha" style="width:90%; padding:10px; margin-bottom:20px; border-radius:8px; border:1px solid #a78bfa; background:#222; color:white;">
+            <button id="btn-login-confirm" style="width:90%; padding:12px; background:#a78bfa; border:none; border-radius:8px; color:white; font-weight:bold; cursor:pointer;">Entrar</button>
+            <button id="btn-login-close" style="background:none; border:none; color:#aaa; margin-top:15px; cursor:pointer;">Cancelar</button>
+            <p id="login-error" style="color:#ff4d4d; display:none; font-size:0.9rem; margin-top:15px; font-weight:bold;">Acesso Negado.</p>
         </div>
     </div>
 
@@ -105,6 +174,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
