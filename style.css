@@ -16,6 +16,11 @@ body.light-mode {
     --glass-border: rgba(0, 0, 0, 0.1);
 }
 
+/* --- BARRA DE ROLAGEM PERSONALIZADA --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--accent-purple), var(--accent-blue)); border-radius: 10px; }
+
 body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; padding-bottom: 100px; transition: 0.5s; }
 
 #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 1s; }
@@ -27,6 +32,19 @@ body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg
 #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
 .floating-heart { position: absolute; bottom: -20px; animation: floatUp linear forwards; }
 @keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+
+/* --- CORAÇÃO AO CLICAR --- */
+.click-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10002;
+    animation: clickFloat 0.8s ease-out forwards;
+    font-size: 1.5rem;
+}
+@keyframes clickFloat {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+}
 
 .container { width: 95%; max-width: 800px; margin: 20px auto; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 20px; padding: 20px; border: 1px solid var(--glass-border); }
 .title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--accent-purple); text-align: center; margin-bottom: 10px; }
@@ -58,9 +76,16 @@ body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg
 .timeline-dot { position: absolute; left: 50%; top: 20px; width: 14px; height: 14px; background: #7c3aed; border-radius: 50%; transform: translateX(-50%); z-index: 2; box-shadow: 0 0 10px #7c3aed; }
 
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
-.photo-card { border-radius: 15px; overflow: hidden; border: 1px solid var(--accent-purple); position: relative; }
-.photo-card img { width: 100%; height: 180px; object-fit: cover; }
+.photo-card { border-radius: 15px; overflow: hidden; border: 1px solid var(--accent-purple); position: relative; cursor: zoom-in; }
+.photo-card img { width: 100%; height: 180px; object-fit: cover; transition: 0.3s; }
+.photo-card:hover img { transform: scale(1.1); }
 .delete-photo { position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.7); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; z-index: 10; }
+
+/* --- LIGHTBOX (AMPLIAR FOTO) --- */
+#lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10005; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
+#lightbox img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 0 30px rgba(167, 139, 250, 0.3); }
+#lightbox-caption { color: white; margin-top: 15px; font-style: italic; }
+.close-lightbox { position: absolute; top: 20px; right: 30px; color: white; font-size: 3rem; cursor: pointer; }
 
 .admin-controls { text-align: center; margin-bottom: 20px; padding: 15px; border: 1px dashed var(--accent-purple); border-radius: 15px; }
 .upload-btn { color: var(--accent-purple); cursor: pointer; font-weight: bold; }
@@ -71,11 +96,46 @@ body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg
 .special-phrase { color: white; font-size: 1.5rem; margin-top: 20px; opacity: 0; transition: 2s; }
 #special-transition.show-text .special-name, #special-transition.show-text .special-phrase { opacity: 1; transform: translateY(0); }
 
-/* MODAL CORRIGIDO PARA NÃO APARECER ANTES */
 #proposal-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 10000; }
 #proposal-modal.show { display: flex; }
-.proposal-card { background: white; padding: 40px; border-radius: 25px; text-align: center; color: #333; }
-#final-surprise-btn { background: linear-gradient(45deg, #a78bfa, #38bdf8); color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+
+/* --- MELHORIA 2: GLASSMORPHISM NO MODAL --- */
+.proposal-card { 
+    background: rgba(255, 255, 255, 0.1) !important; 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 40px; 
+    border-radius: 25px; 
+    text-align: center; 
+    color: white !important; 
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+.proposal-card h2 { color: var(--accent-purple); }
+
+.proposal-buttons { display: flex; gap: 20px; justify-content: center; margin-top: 20px; height: 60px; align-items: center; }
+
+#btn-yes { background: #22c55e; color: white; border: none; padding: 10px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
+
+/* --- MELHORIA 3: CSS PARA O BOTÃO NÃO --- */
+#btn-no { 
+    background: #ef4444; 
+    color: white; 
+    border: none; 
+    padding: 10px 30px; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    font-size: 1.1rem; 
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+#btn-yes:hover { transform: scale(1.1); }
+
+#final-surprise-btn { background: linear-gradient(45deg, #a78bfa, #38bdf8); color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+#final-surprise-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4); }
 
 .music-player { position: fixed; bottom: 20px; left: 20px; background: var(--card-bg); padding: 15px; border-radius: 20px; z-index: 1000; border: 1px solid var(--glass-border); }
 #music-btn { background: var(--accent-purple); color: white; border: none; border-radius: 10px; padding: 5px 15px; cursor: pointer; }
@@ -86,4 +146,151 @@ body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg
     .timeline-item { justify-content: flex-start !important; padding-left: 45px; }
     .timeline-dot { left: 20px !important; }
     .timeline-content { width: 85%; }
+}
+/* Adicione isso ao final do seu style.css */
+
+.emotional-support {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.emotional-card {
+    background: rgba(167, 139, 250, 0.05);
+    border: 1px solid var(--accent-purple);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.emotional-card h3 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: var(--accent-purple);
+    margin-bottom: 10px;
+}
+
+.emotional-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+#saudade-btn {
+    background: var(--accent-purple);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.message-display {
+    margin-top: 15px;
+    font-style: italic;
+    color: var(--accent-blue);
+    min-height: 24px;
+    animation: fadeIn 0.5s;
+}
+
+.reveal-text {
+    cursor: pointer;
+    color: var(--accent-purple);
+    font-weight: bold;
+}
+
+.reveal-text span {
+    display: none;
+    color: var(--text-color);
+    font-weight: normal;
+    font-style: italic;
+}
+
+.reveal-text.active span {
+    display: block;
+    margin-top: 10px;
+}
+
+.reveal-text.active {
+    color: transparent;
+    cursor: default;
+}
+
+.final-thanks {
+    text-align: center;
+    margin-top: 60px;
+    padding: 40px 0;
+    border-top: 1px solid var(--glass-border);
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: var(--accent-purple);
+}
+
+.final-thanks p { margin: 5px 0; }
+
+/* Notificação flutuante */
+.hidden-notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-purple);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 15px;
+    z-index: 10000;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: 1s ease-in-out;
+}
+
+.hidden-notification.show {
+    top: 20px;
+}
+
+.locked-msg {
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.hidden-notification {
+    position: fixed !important;
+    top: -150px !important; /* Aumentei para garantir que saia da tela */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    
+    /* Visual do card */
+    background: #a78bfa !important; 
+    color: white !important;
+    padding: 15px 25px !important;
+    border-radius: 0 0 15px 15px !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+    
+    /* Prioridade máxima */
+    z-index: 99999 !important; 
+    transition: top 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+    text-align: center !important;
+    width: auto !important;
+    min-width: 250px !important;
+}
+
+/* Quando o JS colocar a classe .show, ela desce */
+.hidden-notification.show {
+    top: 0 !important;
+}
+/* Esconde os controles de upload e a data completamente */
+.admin-controls {
+    display: none; /* Totalmente invisível e sem ocupar espaço */
+}
+
+/* Garante que o modal de login também comece escondido */
+#admin-login-modal {
+    display: none;
 }
