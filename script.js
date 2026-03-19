@@ -49,7 +49,7 @@ const historiaFixa = [
     { realDate: new Date(2025, 6, 13), data: "13/07/2025", texto: "Quando finalmente falei com tua mãe e nos assumimos." },
     { realDate: new Date(2025, 8, 13), data: "13/09/2025", texto: "O dia que fui na sua casa e fomos à igreja juntos. ✨" },
     { realDate: new Date(2025, 8, 17), data: "17/09/2025", texto: "Começamos a estudar juntos finalmente!" },
-    { realDate: new Date(2025, 11, 12), data: "12/12/2025", texto: "A despedida difícil, mas necessária para o nosso futuro. ✈️" },
+    { realDate: new Date(2025, 11, 21), data: "21/12/2025", texto: "A despedida difícil, mas necessária para o nosso futuro. ✈️" },
     { realDate: new Date(2026, 1, 18), data: "18/02/2026", texto: "Minha volta definitiva para os seus braços." },
     { realDate: new Date(2099, 0, 1), data: "Hoje", texto: "Construindo nosso futuro um bit de cada vez. 💻❤️" }
 ];
